@@ -1,0 +1,12 @@
+<html>
+    <head>
+            <link href="/assets/styles.css" rel="stylesheet" type="text/css">
+    </head>
+    <% include partials/nav.ejs %>
+    <body>
+        <h1>Contact us</h1>
+        <p>Thanks for getting in touch!</p>
+        <p>You've contacted <%= data.who %> in department <%= data.department %>.</p>
+        <p>We will reply to you at <%= data.email %>!</p>
+    </body>
+</html>
