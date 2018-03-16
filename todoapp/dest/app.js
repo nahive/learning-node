@@ -13,9 +13,4 @@ new todoController.TodoController(app);
 // listen on port
 app.listen(3000);
 console.log('listening on port 3000');
-function test(test) {
-    console.log(test);
-}
-test('abc');
-test(null);
 //# sourceMappingURL=app.js.map
