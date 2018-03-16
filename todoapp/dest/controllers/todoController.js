@@ -1,25 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var TodoController = /** @class */ (function () {
-    function TodoController(app) {
+class TodoController {
+    constructor(app) {
         this.app = app;
         this.bind();
     }
-    TodoController.prototype.bind = function () {
+    bind() {
         this.app.get('/todo', this.get);
         this.app.post('/todo', this.post);
-        this.app.delete('/todo', this.delete);
-    };
-    TodoController.prototype.get = function (req, res) {
+        this.app.delete('/todo:item', this.delete);
+    }
+    get(req, res) {
         res.render('todo');
-    };
-    TodoController.prototype.post = function (req, res) {
+    }
+    post(req, res) {
         // TODO
-    };
-    TodoController.prototype.delete = function (req, res) {
+    }
+    delete(req, res) {
         // TODO
-    };
-    return TodoController;
-}());
+    }
+}
 exports.TodoController = TodoController;
 //# sourceMappingURL=todoController.js.map

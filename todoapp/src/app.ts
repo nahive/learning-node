@@ -17,3 +17,11 @@ new todoController.TodoController(app)
 // listen on port
 app.listen(3000)
 console.log('listening on port 3000')
+
+
+function test(test: any) {
+    console.log(test)
+}
+
+test('abc')
+test(null)
