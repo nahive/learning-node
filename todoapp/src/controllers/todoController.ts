@@ -12,7 +12,7 @@ export class TodoController {
     private bind() {
         this.app.get('/todo', this.get)
         this.app.post('/todo', this.post)
-        this.app.delete('/todo', this.delete)
+        this.app.delete('/todo:item', this.delete)
     }
 
     private get(req: express.Request, res: express.Response) {

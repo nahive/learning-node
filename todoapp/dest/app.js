@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var express = require("express");
-var todoController = require("./controllers/todoController");
-var app = express();
+const express = require("express");
+const todoController = require("./controllers/todoController");
+const app = express();
 // set template engine
 app.set('view engine', 'ejs');
 app.set('views', 'src/views');
@@ -13,4 +13,9 @@ new todoController.TodoController(app);
 // listen on port
 app.listen(3000);
 console.log('listening on port 3000');
+function test(test) {
+    console.log(test);
+}
+test('abc');
+test(null);
 //# sourceMappingURL=app.js.map
