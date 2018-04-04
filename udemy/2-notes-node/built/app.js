@@ -1,20 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var command = process.argv[2];
-var param = process.argv[3];
-console.log(`command: ${command}, param: ${param}`);
-switch (command) {
+const yargs = require("yargs");
+const notes = require("./notes");
+const argv = yargs.argv;
+switch (argv._[0]) {
     case 'add':
-        console.log('adding new note');
+        notes.add(argv.title, argv.body);
         break;
     case 'list':
-        console.log('listing all notes');
+        notes.list();
         break;
     case 'read':
-        console.log('read note');
+        notes.get(argv.title);
         break;
     case 'remove':
-        console.log('remove note');
+        notes.del(argv.title);
         break;
     default:
         console.log('command not recognized');

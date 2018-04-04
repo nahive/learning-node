@@ -1,28 +1,26 @@
 
 import * as fs from 'fs'
 import * as _ from 'lodash'
+import * as yargs from 'yargs'
 
 import * as notes from './notes'
 
-var command = process.argv[2]
-var param = process.argv[3]
+const argv = yargs.argv
 
-console.log(`command: ${command}, param: ${param}`)
-
-switch (command) {
+switch (argv._[0]) {
     case 'add':
-    console.log('adding new note')
+    notes.add(argv.title, argv.body)
     break
     case 'list':
-        console.log('listing all notes')
-        break
+    notes.list()
+    break
     case 'read':
-        console.log('read note')
-        break
+    notes.get(argv.title)
+    break
     case 'remove':
-        console.log('remove note')
-        break
+    notes.del(argv.title)
+    break
     default:
-        console.log('command not recognized')
-        break
+    console.log('command not recognized')
+    break
 }
