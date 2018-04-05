@@ -2,7 +2,7 @@ import * as fs from 'fs'
 
 class Note {
     public title: string
-    private body: string
+    public body: string
 
     constructor(title: string, body: string) {
         this.title = title
@@ -13,9 +13,13 @@ class Note {
 var notes: Note[] = fetch()
 
 function fetch(): Note[] {
-    var file = fs.readFileSync('notes.json').toString()
-    var arr = JSON.parse(file) as Note[]
-    return arr
+    try {
+        var file = fs.readFileSync('notes.json').toString()
+        var arr = JSON.parse(file) as Note[]
+        return arr
+    } catch (e) {
+        return []     
+    }
 }
 
 function save() {
@@ -23,10 +27,28 @@ function save() {
     fs.writeFileSync('notes.json', str)
 }
 
+function finddups(title: string): boolean {
+    return notes.filter(note => note.title === title).length > 0
+}
+
+function log(note: Note) {
+    console.log('======= NOTE =======')
+    console.log(`title: ${note.title}`)
+    console.log(`body:  ${note.body}`)
+    console.log('====================')
+}
+
 export function add(title: string, body: string) {
-    console.log(`adding note with title: ${title} and body: ${body}`)
-    notes.push(new Note(title, body))
-    
+    if (finddups(title)) {
+        console.log(`note with title: ${title} already exists`)
+        return
+    }
+
+    var note = new Note(title, body)
+    notes.push(note)
+    console.log(`adding note`)
+    log(note)
+
     save()
 }
 
@@ -37,7 +59,7 @@ export function list() {
     }
 
     console.log('listing all notes')
-    notes.forEach(note => { console.log(note) })
+    notes.forEach(note => { log(note) })
 
     save()
 }
@@ -51,7 +73,7 @@ export function get(title: string) {
     }
 
     console.log(`listing notes with title: ${title}`)
-    filtered.forEach(note => { console.log(note) })
+    filtered.forEach(note => { log(note) })
 }
 
 export function del(title: string) {
@@ -63,12 +85,12 @@ export function del(title: string) {
     }
 
     console.log(`removing notes with title: ${title}`)
-    filtered.forEach(note => { console.log('removing note', note) })
+    filtered.forEach(note => { console.log('removing note'); log(note) })
 
     notes = notes.filter(note => note.title !== title)
 
     console.log('result after removal')
-    notes.forEach(note => { console.log(note) })
+    notes.forEach(note => { log(note) })
 
     save()
 }

@@ -9,17 +9,37 @@ class Note {
 }
 var notes = fetch();
 function fetch() {
-    var file = fs.readFileSync('notes.json').toString();
-    var arr = JSON.parse(file);
-    return arr;
+    try {
+        var file = fs.readFileSync('notes.json').toString();
+        var arr = JSON.parse(file);
+        return arr;
+    }
+    catch (e) {
+        return [];
+    }
 }
 function save() {
     var str = JSON.stringify(notes);
     fs.writeFileSync('notes.json', str);
 }
+function finddups(title) {
+    return notes.filter(note => note.title === title).length > 0;
+}
+function log(note) {
+    console.log('======= NOTE =======');
+    console.log(`title: ${note.title}`);
+    console.log(`body:  ${note.body}`);
+    console.log('====================');
+}
 function add(title, body) {
-    console.log(`adding note with title: ${title} and body: ${body}`);
-    notes.push(new Note(title, body));
+    if (finddups(title)) {
+        console.log(`note with title: ${title} already exists`);
+        return;
+    }
+    var note = new Note(title, body);
+    notes.push(note);
+    console.log(`adding note`);
+    log(note);
     save();
 }
 exports.add = add;
@@ -29,7 +49,7 @@ function list() {
         return;
     }
     console.log('listing all notes');
-    notes.forEach(note => { console.log(note); });
+    notes.forEach(note => { log(note); });
     save();
 }
 exports.list = list;
@@ -40,7 +60,7 @@ function get(title) {
         return;
     }
     console.log(`listing notes with title: ${title}`);
-    filtered.forEach(note => { console.log(note); });
+    filtered.forEach(note => { log(note); });
 }
 exports.get = get;
 function del(title) {
@@ -50,10 +70,10 @@ function del(title) {
         return;
     }
     console.log(`removing notes with title: ${title}`);
-    filtered.forEach(note => { console.log('removing note', note); });
+    filtered.forEach(note => { console.log('removing note'); log(note); });
     notes = notes.filter(note => note.title !== title);
     console.log('result after removal');
-    notes.forEach(note => { console.log(note); });
+    notes.forEach(note => { log(note); });
     save();
 }
 exports.del = del;
