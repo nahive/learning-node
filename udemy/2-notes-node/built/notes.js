@@ -1,16 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs");
 class Note {
     constructor(title, body) {
         this.title = title;
         this.body = body;
     }
 }
-var notes = [new Note('test1', 'body1'), new Note('test2', 'body2'), new Note('test3', 'body3'),
-    new Note('test4', 'body4'), new Note('dup', 'body5'), new Note('dup', 'body6')];
+var notes = fetch();
+function fetch() {
+    var file = fs.readFileSync('notes.json').toString();
+    var arr = JSON.parse(file);
+    return arr;
+}
+function save() {
+    var str = JSON.stringify(notes);
+    fs.writeFileSync('notes.json', str);
+}
 function add(title, body) {
     console.log(`adding note with title: ${title} and body: ${body}`);
     notes.push(new Note(title, body));
+    save();
 }
 exports.add = add;
 function list() {
@@ -20,6 +30,7 @@ function list() {
     }
     console.log('listing all notes');
     notes.forEach(note => { console.log(note); });
+    save();
 }
 exports.list = list;
 function get(title) {
@@ -43,6 +54,7 @@ function del(title) {
     notes = notes.filter(note => note.title !== title);
     console.log('result after removal');
     notes.forEach(note => { console.log(note); });
+    save();
 }
 exports.del = del;
 //# sourceMappingURL=notes.js.map

@@ -1,3 +1,4 @@
+import * as fs from 'fs'
 
 class Note {
     public title: string
@@ -9,12 +10,24 @@ class Note {
     }
 }
 
-var notes: Note[] = [new Note('test1', 'body1'), new Note('test2', 'body2'), new Note('test3', 'body3'),
-                     new Note('test4', 'body4'), new Note('dup', 'body5'), new Note('dup', 'body6')]
+var notes: Note[] = fetch()
+
+function fetch(): Note[] {
+    var file = fs.readFileSync('notes.json').toString()
+    var arr = JSON.parse(file) as Note[]
+    return arr
+}
+
+function save() {
+    var str = JSON.stringify(notes)
+    fs.writeFileSync('notes.json', str)
+}
 
 export function add(title: string, body: string) {
     console.log(`adding note with title: ${title} and body: ${body}`)
     notes.push(new Note(title, body))
+    
+    save()
 }
 
 export function list() {
@@ -25,6 +38,8 @@ export function list() {
 
     console.log('listing all notes')
     notes.forEach(note => { console.log(note) })
+
+    save()
 }
 
 export function get(title: string) {
@@ -54,4 +69,6 @@ export function del(title: string) {
 
     console.log('result after removal')
     notes.forEach(note => { console.log(note) })
+
+    save()
 }
