@@ -9,8 +9,12 @@
             "request": "launch",
             "name": "Launch",
             "sourceMaps": true,
-            "program": "${workspaceFolder}/2-notes-node/src/app.ts",
-            "outFiles": ["${workspaceFolder}/2-notes-node/built/*.js"]
+            "args":[
+                // "add", "-title", "test_title", "-body", "test_body"
+                "list"
+            ],
+            "program": "${workspaceFolder}/2-notes-node/built/app.js",
+            // "outFiles": ["${workspaceFolder}/2-notes-node/built/*.js"]
         }
     ]
 }
