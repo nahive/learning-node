@@ -9,12 +9,9 @@
             "request": "launch",
             "name": "Launch",
             "sourceMaps": true,
-            "args":[
-                // "add", "-title", "test_title", "-body", "test_body"
-                "list"
-            ],
-            "program": "${workspaceFolder}/2-notes-node/built/app.js",
-            // "outFiles": ["${workspaceFolder}/2-notes-node/built/*.js"]
+            "args": [],
+            "program": "${workspaceFolder}/src/async-basics.ts",
+            "outFiles": ["${workspaceFolder}/built/*.js"]
         }
     ]
 }
