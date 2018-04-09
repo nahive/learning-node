@@ -26,29 +26,30 @@ function finddups(title) {
     return notes.filter(note => note.title === title).length > 0;
 }
 function log(note) {
+    console.log('');
     console.log('======= NOTE =======');
-    console.log(`title: ${note.title}`);
-    console.log(`body:  ${note.body}`);
-    console.log('====================');
+    console.log(`Title: ${note.title}`);
+    console.log(`Body:  ${note.body}`);
+    console.log('');
 }
 function add(title, body) {
     if (finddups(title)) {
-        console.log(`note with title: ${title} already exists`);
+        console.log(`Note with title: ${title} already exists`);
         return;
     }
     var note = new Note(title, body);
     notes.push(note);
-    console.log(`adding note`);
+    console.log(`Adding note`);
     log(note);
     save();
 }
 exports.add = add;
 function list() {
     if (notes.length == 0) {
-        console.log('no notes available');
+        console.log('No notes available');
         return;
     }
-    console.log('listing all notes');
+    console.log('Listing all notes');
     notes.forEach(note => { log(note); });
     save();
 }
@@ -56,23 +57,23 @@ exports.list = list;
 function get(title) {
     var filtered = notes.filter(note => note.title === title);
     if (filtered.length == 0) {
-        console.log('no notes available with specified criteria');
+        console.log('No notes available with specified criteria');
         return;
     }
-    console.log(`listing notes with title: ${title}`);
+    console.log(`Listing notes with title: ${title}`);
     filtered.forEach(note => { log(note); });
 }
 exports.get = get;
 function del(title) {
     var filtered = notes.filter(note => note.title === title);
     if (filtered.length == 0) {
-        console.log('no notes available with specified criteria');
+        console.log('No notes available with specified criteria');
         return;
     }
-    console.log(`removing notes with title: ${title}`);
-    filtered.forEach(note => { console.log('removing note'); log(note); });
+    console.log(`Removing notes with title: ${title}`);
+    filtered.forEach(note => { console.log('Removing note'); log(note); });
     notes = notes.filter(note => note.title !== title);
-    console.log('result after removal');
+    console.log('Result after removal');
     notes.forEach(note => { log(note); });
     save();
 }
