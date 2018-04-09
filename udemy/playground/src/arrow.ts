@@ -18,4 +18,4 @@ let user = {
 }
 
 user.hi(1, 2, 3)
-user.hialt(1,2,3)
+user.hialt(1, 2, 3)
