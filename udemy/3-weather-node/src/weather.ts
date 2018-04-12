@@ -56,69 +56,67 @@ export class WeatherFetcher {
 
     private darkweatherURL = `https://api.darksky.net/forecast/${this.darkweatherKey}/`
     
-    public fetch(address: string): Promise<Weather> {
-        return this.fetchLocation(address).then( (location) => { return this.fetchWeather(location) })
+    public fetch(address: string, callback: (weather?: Weather, error?: Error) => any) {
+        this.fetchLocation(address, (location, error) => { 
+            if (!location) { callback(undefined, error); return }
+            this.fetchWeather(location, callback)
+         })
     }
 
-    private fetchLocation(address: string): Promise<Location> {
+    private fetchLocation(address: string, callback: (location?: Location, error?: Error) => any) {
         let url = this.googleURL + encodeURIComponent(address)
 
         process.stdout.write(`Fetching location for ${address} ... `)
 
-        return new Promise<Location>((resolve, reject) => {
-            request(url, { json: true }, (error, response, body) => {
-                if (error) {
-                    reject(new Error('Unable to connect to Google servers'))
-                    return
-                }
-    
-                if (body.status === 'ZERO_RESULTS') {
-                    reject(new Error('Unable to find that address'))
-                    return
-                }
-    
-                if (body.status === 'OVER_QUERY_LIMIT') {
-                    reject(new Error('Too many requests - please try again later'))
-                    return
-                }
-    
-                if (body.status === 'OK') {
-                    let result = body.results[0]
-                    let nameJSON = result.formatted_address
-                    let locationJSON = result.geometry.location
-                    let location = new Location(nameJSON, locationJSON.lng, locationJSON.lat)
-    
-                    console.log('Success!')
-                    resolve(location)
-                } else {
-                    reject(new Error('Unknown error occured'))
-                }      
-            })
+        request(url, { json: true }, (error, response, body) => {
+            if (error) {
+                callback(undefined, new Error('Unable to connect to Google servers'))
+                return
+            }
+
+            if (body.status === 'ZERO_RESULTS') {
+                callback(undefined, new Error('Unable to find that address'))
+                return
+            }
+
+            if (body.status === 'OVER_QUERY_LIMIT') {
+                callback(undefined, new Error('Too many requests - please try again later'))
+                return
+            }
+
+            if (body.status === 'OK') {
+                let result = body.results[0]
+                let nameJSON = result.formatted_address
+                let locationJSON = result.geometry.location
+                let location = new Location(nameJSON, locationJSON.lng, locationJSON.lat)
+
+                console.log('Success!')
+                callback(location)
+            } else {
+                callback(undefined, new Error('Unknown error occured'))
+            }      
         })
     }
 
-    private fetchWeather(location: Location): Promise<Weather> {
+    private fetchWeather(location: Location, callback: (weather?: Weather, error?: Error) => any) {
         let url = this.darkweatherURL + `${location.lat},${location.lng}`
 
         process.stdout.write(`Fetching weather for ${location.name}  ...`)
+        request(url, { json: true , qs: {'units': 'si'} }, (error, response, body) => {
+            if (error) {
+                callback(undefined, new Error('Unable to connect to DarkSky servers'))
+                return
+            }
 
-        return new Promise<Weather>((resolve, reject) => {
-            request(url, { json: true , qs: {'units': 'si'} }, (error, response, body) => {
-                if (error) {
-                    reject(new Error('Unable to connect to DarkSky servers'))
-                    return
-                }
-    
-                let weatherJSON = body.currently
-                let weather = new Weather(
-                    location,
-                    weatherJSON.summary, 
-                    weatherJSON.temperature, 
-                    weatherJSON.apparentTemperature)
-    
-                console.log('Success!')
-                resolve(weather)
-            })
+            let weatherJSON = body.currently
+            let weather = new Weather(
+                location,
+                weatherJSON.summary, 
+                weatherJSON.temperature, 
+                weatherJSON.apparentTemperature)
+
+            console.log('Success!')
+            callback(weather)
         })
     }
 }
