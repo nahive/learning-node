@@ -9,9 +9,10 @@
             "request": "launch",
             "name": "Launch",
             "sourceMaps": true,
-            "args": [],
-            "program": "${workspaceFolder}/src/app.js",
-            "outFiles": ["${workspaceFolder}/built/*.js"]
+            "args": ["-a", "Gajdzika 12a"],
+            "program": "${workspaceFolder}/src/app.ts",
+            "outFiles": ["${workspaceFolder}/built/*.js"],
+            "console": "integratedTerminal"
         }
     ]
 }

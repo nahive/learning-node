@@ -9,10 +9,36 @@ class Location {
     }
 }
 class Weather {
-    constructor(location, summary, temperature) {
+    constructor(location, summary, temperature, feelsLike) {
         this.location = location;
         this.summary = summary;
         this.temperature = temperature;
+        this.feelsLike = feelsLike;
+    }
+    log() {
+        console.log(' ');
+        console.log(' ');
+        console.log(`      ⛅  Weather in ${this.location.name}`);
+        console.log(`      🗒  Summary: ${this.summary}`);
+        console.log(`      ${this.icon(this.temperature)}  Temperature: ${this.temperature}°C (${this.ctof(this.temperature).toFixed(2)}°F)`);
+        console.log(`      ${this.icon(this.feelsLike)}  Feels like: ${this.feelsLike}°C (${this.ctof(this.temperature).toFixed(2)}°F)`);
+        console.log(' ');
+        console.log(' ');
+    }
+    icon(temperature) {
+        if (temperature < 5)
+            return "❄️";
+        else if (temperature < 10)
+            return "☁️";
+        else if (temperature < 20)
+            return "⛅️";
+        else if (temperature < 30)
+            return "☀️";
+        else
+            return "🔥";
+    }
+    ctof(celsius) {
+        return celsius * 1.8 + 32;
     }
 }
 class WeatherFetcher {
@@ -21,25 +47,54 @@ class WeatherFetcher {
         this.darkweatherURL = `https://api.darksky.net/forecast/${this.darkweatherKey}/`;
     }
     fetch(address, callback) {
-        this.fetchLocation(address, (location) => { this.fetchWeather(location, callback); });
+        this.fetchLocation(address, (location, error) => {
+            if (!location) {
+                callback(undefined, error);
+                return;
+            }
+            this.fetchWeather(location, callback);
+        });
     }
     fetchLocation(address, callback) {
         let url = this.googleURL + encodeURIComponent(address);
-        console.log(`Fetching location for ${address} ...`);
+        process.stdout.write(`Fetching location for ${address} ... `);
         request(url, { json: true }, (error, response, body) => {
-            let result = body.results[0];
-            let nameJSON = result.formatted_address;
-            let locationJSON = result.geometry.location;
-            let location = new Location(nameJSON, locationJSON.lng, locationJSON.lat);
-            callback(location);
+            if (error) {
+                callback(undefined, new Error('Unable to connect to Google servers'));
+                return;
+            }
+            if (body.status === 'ZERO_RESULTS') {
+                callback(undefined, new Error('Unable to find that address'));
+                return;
+            }
+            if (body.status === 'OVER_QUERY_LIMIT') {
+                callback(undefined, new Error('Too many requests - please try again later'));
+                return;
+            }
+            if (body.status === 'OK') {
+                let result = body.results[0];
+                let nameJSON = result.formatted_address;
+                let locationJSON = result.geometry.location;
+                let location = new Location(nameJSON, locationJSON.lng, locationJSON.lat);
+                console.log('Success!');
+                callback(location);
+            }
+            else {
+                callback(undefined, new Error('Unknown error occured'));
+            }
         });
     }
     fetchWeather(location, callback) {
         let url = this.darkweatherURL + `${location.lat},${location.lng}`;
-        console.log(`Fetching weather for ${location.name}  ...`);
-        request(url, { json: true }, (error, response, body) => {
+        process.stdout.write(`Fetching weather for ${location.name}  ...`);
+        request(url, { json: true, qs: { 'units': 'si' } }, (error, response, body) => {
+            if (error) {
+                callback(undefined, new Error('Unable to connect to DarkSky servers'));
+                return;
+            }
             let weatherJSON = body.currently;
-            let weather = new Weather(location, weatherJSON.summary, weatherJSON.temperature);
+            let weather = new Weather(location, weatherJSON.summary, weatherJSON.temperature, weatherJSON.apparentTemperature);
+            console.log('Success!');
             callback(weather);
         });
     }

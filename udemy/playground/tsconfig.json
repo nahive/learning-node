@@ -6,6 +6,10 @@
         "rootDir": "src",
         "outDir": "built",
         "strictNullChecks": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitReturns": true,
+        "strict": true,
+        "noUnusedLocals": true,
         "typeRoots": [
             "node_modules/@types"
         ]

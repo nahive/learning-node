@@ -1,3 +1,4 @@
+"use strict";
 // let square = (x: number): number => x * x
 // console.log(square(9))
 // let user = {

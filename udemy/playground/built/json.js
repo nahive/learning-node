@@ -1,3 +1,4 @@
+"use strict";
 // // var obj = { name: "szymon" }
 // // var strObj = JSON.stringify(obj)
 // // console.log(typeof strObj)
