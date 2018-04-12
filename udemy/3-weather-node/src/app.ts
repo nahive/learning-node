@@ -14,8 +14,9 @@ let argv = yargs
 let address = argv.address
 let fetcher = new weather.WeatherFetcher()
 
-fetcher.fetch(address, (weather, error) => { 
-    if (error) { console.log(error.message); return }
-    if (weather) weather.log()
- })
-
+fetcher.fetch(address).then((weather) => {
+    weather.log()
+}).catch((error) => {
+    let err = error as Error
+    console.log(err.message)
+})
