@@ -1,26 +1,49 @@
 import * as express from 'express'
 import * as hbs from 'hbs'
+import * as fs from 'fs'
 
-var app = express()
+const port = process.env.PORT || 3000
+
+let app = express()
+
 
 app.set('view engine', 'hbs')
+
+app.use((req, res, next) => {
+    let now = new Date().toString()
+    let log = `${now}: ${req.method} ${req.url}`
+
+    console.log(log)
+    fs.appendFile('server.log', log + '\n', (err) => { })
+    next()
+})
+
+// app.use((req, res, next) => {
+//     res.render('maintenence.hbs')
+// })
+
 app.use(express.static('./public'))
+
+hbs.registerPartials('./views/partials')
+
+hbs.registerHelper('getCurrentYear', () => { return new Date().getFullYear() })
+hbs.registerHelper('screamIt', (text: string) => {
+    return text.toUpperCase()
+})
 
 app.get('/', (req, res) => {
     res.render('home.hbs', {
         title: 'Home Page',
         welcomemsg: 'Welcome to my website',
-        year: new Date().getFullYear()
     })
 })
 
 app.get('/about', (req, res) => {
     res.render('about.hbs', {
         title: 'About Page',
-        year: new Date().getFullYear()
     })
 })
 
-app.listen(3000, () => {
-    console.log('Server is up on port 3000')
+app.listen(port, () => {
+    console.log(`Server is up on port ${port}`)
 })
