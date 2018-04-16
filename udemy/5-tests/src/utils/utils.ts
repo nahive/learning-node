@@ -3,8 +3,20 @@ export function add(a: number, b: number): number {
     return a + b
 }
 
+export function asyncAdd(a: number, b: number, callback: (result: number) => void) {
+    setTimeout(() => {
+        callback(a + b)
+    }, 50)
+}
+
 export function square(a: number): number {
     return a * a
+}
+
+export function asyncSquare(a: number, callback: (result: number) => void) {
+    setTimeout(() => {
+        callback(a * a)
+    }, 50)
 }
 
 type user = {firstname: string, lastname: string, age: number}
