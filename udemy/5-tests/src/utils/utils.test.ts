@@ -1,7 +1,7 @@
 import * as utils from './utils'
 import * as expect from 'expect'
 
-describe('utils testing', () => { 
+describe('Utils', () => { 
     describe('#sync', () => {
         it('should add two numbers', () => {
             let res = utils.add(33, 11)

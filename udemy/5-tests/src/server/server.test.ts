@@ -4,7 +4,7 @@ import * as expect from 'expect'
 
 let app = server.app
 
-describe('server testing', () => {
+describe('Server', () => {
     it('should return hello world response', (done) => {
         request(app)
             .get('/')
